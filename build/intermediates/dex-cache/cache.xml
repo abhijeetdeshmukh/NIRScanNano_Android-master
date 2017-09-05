@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="true"
+        jar="C:\Users\ABHIJEET\.android\build-cache\fc8578e23d34ebec6d481bc1ddb953d9a14bc149\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="5326d9a850d491714fef8cbfaa9ea3416f0bf0d2">
+        <dex dex="D:\Abhijeet\acad\mtp\NIRScanNano_Android-master\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_87ce32960c2ee70bb2c04c182e429ff331930965\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="D:\Abhijeet\acad\mtp\NIRScanNano_Android-master\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="6ca539822477d313013d39b9bed08d4585b6e27b">
+        <dex dex="D:\Abhijeet\acad\mtp\NIRScanNano_Android-master\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run-bootstrap_d44433be45dfaf8d1ec7f6a3cdf2fc3bbdedb3e3\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="D:\Abhijeet\acad\mtp\NIRScanNano_Android-master\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="3be78ebc2706b2e1fe2f12d5726887a92d6c183b">
+        <dex dex="D:\Abhijeet\acad\mtp\NIRScanNano_Android-master\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run_1f2795b08df99fc371bd4a4d5dae592b4c2172bd\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\ABHIJEET\.android\build-cache\70528c1166a57880f7dee875461b0b33902518fd\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="ec75036c3c52e451d0cde50a5aedaf5fd32354a0">
+        <dex dex="D:\Abhijeet\acad\mtp\NIRScanNano_Android-master\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_570290cd04c4df1c86484915d213f900a7ad4bc1\classes.dex" />
+    </item>
+
+</items>
