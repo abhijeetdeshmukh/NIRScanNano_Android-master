@@ -156,4 +156,9 @@
     <string name="desc_info">Info icon</string>
     <string name="no">No</string>
 
+
+    <string name="compare">Compare</string>
+    <string name="action_dummy">Dummy actuvity</string>
+    <string name="file_null">No data found in the file!</string>
+
 </resources>

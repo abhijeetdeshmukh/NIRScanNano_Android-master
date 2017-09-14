@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,6 +58,9 @@ public class GraphActivity extends Activity {
 
     private static Context mContext;
 
+    private TextView mAnalysisTV ;
+    private Button mCompareButton ;
+
     private ListView graphListView;
     private ViewPager mViewPager;
     private String fileName;
@@ -67,7 +71,6 @@ public class GraphActivity extends Activity {
     private ArrayList<Entry> mReflectanceFloat;
 
     ArrayList<KSTNanoSDK.ScanListManager> graphDict = new ArrayList<>();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,6 +125,9 @@ public class GraphActivity extends Activity {
         }
 
         graphListView = (ListView) findViewById(R.id.lv_scan_data);
+
+        mAnalysisTV = (TextView) findViewById(R.id.tv_analysis);
+        mCompareButton = (Button) findViewById(R.id.btn_compare);
     }
 
     @Override
@@ -313,23 +319,20 @@ public class GraphActivity extends Activity {
 
     }
 
-    /**
-     * When the activity is destroyed, nothing is needed except a call to the super class
-     */
+    /*** When the activity is destroyed, nothing is needed except a call to the super class*/
     @Override
     public void onDestroy() {
         super.onDestroy();
     }
 
-    /**
-     * Inflate the options menu so that user actions are present
-     */
+    /*** Inflate the options menu so that user actions are present*/
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_graph, menu);
         return true;
     }
+
     /**
      * Handle the selection of a menu item.
      * In this case, the user has the ability to email a file as well as navigate backwards.

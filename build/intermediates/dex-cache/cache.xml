@@ -2,13 +2,31 @@
 <items version="2" >
 
     <item
-        is-multidex="true"
+        is-multidex="false"
+        jar="D:\Abhijeet\acad\mtp\NIRScanNano_Android-master\MPChartLib\build\intermediates\bundles\default\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="05cc9eb7dcf15c7aa8793fb964d0ad7498b56232">
+        <dex dex="D:\Abhijeet\acad\mtp\NIRScanNano_Android-master\app\build\intermediates\pre-dexed\debug\classes_044a46eafcb7d40b9f2a24a6a82c1126bb3fa6a9.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\ABHIJEET\.android\build-cache\70528c1166a57880f7dee875461b0b33902518fd\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="ec75036c3c52e451d0cde50a5aedaf5fd32354a0">
+        <dex dex="D:\Abhijeet\acad\mtp\NIRScanNano_Android-master\app\build\intermediates\pre-dexed\debug\classes_570290cd04c4df1c86484915d213f900a7ad4bc1.jar" />
+    </item>
+    <item
+        is-multidex="false"
         jar="C:\Users\ABHIJEET\.android\build-cache\fc8578e23d34ebec6d481bc1ddb953d9a14bc149\output\jars\classes.jar"
-        jumboMode="true"
+        jumboMode="false"
         optimize="true"
         revision="25.0.0"
         sha1="5326d9a850d491714fef8cbfaa9ea3416f0bf0d2">
-        <dex dex="D:\Abhijeet\acad\mtp\NIRScanNano_Android-master\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_87ce32960c2ee70bb2c04c182e429ff331930965\classes.dex" />
+        <dex dex="D:\Abhijeet\acad\mtp\NIRScanNano_Android-master\app\build\intermediates\pre-dexed\debug\classes_87ce32960c2ee70bb2c04c182e429ff331930965.jar" />
     </item>
     <item
         is-multidex="true"
@@ -16,7 +34,7 @@
         jumboMode="true"
         optimize="true"
         revision="25.0.0"
-        sha1="6ca539822477d313013d39b9bed08d4585b6e27b">
+        sha1="4812a9493daa678539d452ea1fcfc088c6e14f0e">
         <dex dex="D:\Abhijeet\acad\mtp\NIRScanNano_Android-master\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run-bootstrap_d44433be45dfaf8d1ec7f6a3cdf2fc3bbdedb3e3\classes.dex" />
     </item>
     <item
@@ -27,15 +45,6 @@
         revision="25.0.0"
         sha1="3be78ebc2706b2e1fe2f12d5726887a92d6c183b">
         <dex dex="D:\Abhijeet\acad\mtp\NIRScanNano_Android-master\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run_1f2795b08df99fc371bd4a4d5dae592b4c2172bd\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="C:\Users\ABHIJEET\.android\build-cache\70528c1166a57880f7dee875461b0b33902518fd\output\jars\classes.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="25.0.0"
-        sha1="ec75036c3c52e451d0cde50a5aedaf5fd32354a0">
-        <dex dex="D:\Abhijeet\acad\mtp\NIRScanNano_Android-master\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_570290cd04c4df1c86484915d213f900a7ad4bc1\classes.dex" />
     </item>
 
 </items>

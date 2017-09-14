@@ -86,7 +86,7 @@ public class NewScanActivity extends Activity {
     private ProgressDialog barProgressDialog;
 
     private ViewPager mViewPager;
-    private String fileName;
+    private String referenceFileName,fileName;
     private ArrayList<String> mXValues;
 
     private ArrayList<Entry> mIntensityFloat;
@@ -146,6 +146,12 @@ public class NewScanActivity extends Activity {
         calProgress.setVisibility(View.VISIBLE);
         connected = false;
 
+        //Set the filename from the intent
+        Intent intent = getIntent();
+        fileName = intent.getStringExtra("file_name");
+
+        referenceFileName = fileName ;
+
         ll_conf = (LinearLayout)findViewById(R.id.ll_conf);
         ll_conf.setClickable(false);
         ll_conf.setOnClickListener(new View.OnClickListener() {
@@ -154,14 +160,11 @@ public class NewScanActivity extends Activity {
                 if(activeConf != null) {
                     Intent activeConfIntent = new Intent(mContext, ActiveScanActivity.class);
                     activeConfIntent.putExtra("conf",activeConf);
+                    activeConfIntent.putExtra("filename",referenceFileName);
                     startActivity(activeConfIntent);
                 }
             }
         });
-
-        //Set the filename from the intent
-        Intent intent = getIntent();
-        fileName = intent.getStringExtra("file_name");
 
         //Set up action bar enable tab navigation
         ActionBar ab = getActionBar();
@@ -301,9 +304,7 @@ public class NewScanActivity extends Activity {
         SettingsManager.storeBooleanPref(mContext, SettingsManager.SharedPreferencesKeys.continuousScan, btn_continuous.isChecked());
     }
 
-    /*
-     * Inflate the options menu so that user actions are present
-     */
+    /*** Inflate the options menu so that user actions are present*/
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -336,9 +337,7 @@ public class NewScanActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * Pager enum to control tab tile and layout resource
-     */
+    /*** Pager enum to control tab tile and layout resource*/
     public enum CustomPagerEnum {
 
         REFLECTANCE(R.string.reflectance, R.layout.page_graph_reflectance),
@@ -359,9 +358,7 @@ public class NewScanActivity extends Activity {
 
     }
 
-    /**
-     * Custom pager adapter to handle changing chart data when pager tabs are changed
-     */
+    /*** Custom pager adapter to handle changing chart data when pager tabs are changed*/
     public class CustomPagerAdapter extends PagerAdapter {
 
         private final Context mContext;
@@ -685,18 +682,14 @@ public class NewScanActivity extends Activity {
         }
     }
 
-    /**
-     * Custom enum for chart type
-     */
+    /*** Custom enum for chart type*/
     public enum ChartType {
         REFLECTANCE,
         ABSORBANCE,
         INTENSITY
     }
 
-    /**
-     * Custom receiver for handling scan data and setting up the graphs properly
-     */
+    /*** Custom receiver for handling scan data and setting up the graphs properly*/
     public class scanDataReadyReceiver extends BroadcastReceiver {
 
         public void onReceive(Context context, Intent intent) {
@@ -806,9 +799,7 @@ public class NewScanActivity extends Activity {
         }
     }
 
-    /**
-     * Custom receiver for returning the event that reference calibrations have been read
-     */
+    /*** Custom receiver for returning the event that reference calibrations have been read*/
     public class refReadyReceiver extends BroadcastReceiver {
 
         public void onReceive(Context context, Intent intent) {
@@ -821,9 +812,7 @@ public class NewScanActivity extends Activity {
         }
     }
 
-    /**
-     * Custom receiver for returning the event that a scan has been initiated from the button
-     */
+    /*** Custom receiver for returning the event that a scan has been initiated from the button*/
     public class ScanStartedReceiver extends BroadcastReceiver {
 
         public void onReceive(Context context, Intent intent) {
@@ -832,10 +821,7 @@ public class NewScanActivity extends Activity {
         }
     }
 
-    /**
-     * Custom receiver that will request the time once all of the GATT notifications have been
-     * subscribed to
-     */
+    /*** Custom receiver that will request the time once all of the GATT notifications have been subscribed to*/
     public class notifyCompleteReceiver extends BroadcastReceiver {
 
         public void onReceive(Context context, Intent intent) {
@@ -1105,9 +1091,7 @@ public class NewScanActivity extends Activity {
 
     }
 
-    /**
-     * Custom receiver for receiving calibration coefficient data.
-     */
+    /*** Custom receiver for receiving calibration coefficient data.*/
     public class requestCalCoeffReceiver extends BroadcastReceiver {
 
         @Override
@@ -1160,9 +1144,7 @@ public class NewScanActivity extends Activity {
         }
     }
 
-    /**
-     * Custom receiver for handling scan configurations
-     */
+    /*** Custom receiver for handling scan configurations*/
     private class ScanConfReceiver extends BroadcastReceiver {
 
         @Override
@@ -1205,4 +1187,5 @@ public class NewScanActivity extends Activity {
             finish();
         }
     }
+
 }

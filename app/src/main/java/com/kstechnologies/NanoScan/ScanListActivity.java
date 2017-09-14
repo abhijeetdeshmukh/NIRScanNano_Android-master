@@ -1,4 +1,5 @@
 package com.kstechnologies.NanoScan;
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
@@ -96,17 +97,17 @@ public class ScanListActivity extends Activity {
         // Animate the Splash
 //        mSplashLayout.setAnimation(animSplash);
 //        animSplash.start();
+
     }
 
-    /*
-     * When the activity is destroyed, make a call to the super class
-     */
+    /** When the activity is destroyed, make a call to the super class*/
     @Override
     public void onDestroy() {
         super.onDestroy();
     }
 
-    /* On resume, check for crashes and updates with HockeyApp,
+    /**
+     *  On resume, check for crashes and updates with HockeyApp,
      * and set up the file list,swipe menu, and event listeners
      */
     @Override
@@ -184,11 +185,10 @@ public class ScanListActivity extends Activity {
             public void afterTextChanged(Editable s) {
             }
         });
+
     }
 
-    /**
-     * Inflate the options menu so that the info, settings, and connect icons are visible
-     */
+    /*** Inflate the options menu so that the info, settings, and connect icons are visible*/
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

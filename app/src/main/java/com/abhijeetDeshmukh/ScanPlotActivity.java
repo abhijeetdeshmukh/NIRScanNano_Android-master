@@ -175,7 +175,7 @@ public class ScanPlotActivity extends Activity {
         try {
             String line;
             if (reader != null) {
-                while ((line = reader.readLine()) != null) {
+                while ( (line = reader.readLine() ) != null) {
                     String[] RowData = line.split(",");
                     if (RowData[0].equals("(null)")) {
                         mXValues.add("0");

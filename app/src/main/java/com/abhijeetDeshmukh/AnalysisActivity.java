@@ -84,7 +84,6 @@ public class AnalysisActivity extends Activity {
 
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -135,15 +134,14 @@ public class AnalysisActivity extends Activity {
         animSplash.start();
     }
 
-    /*
-     * When the activity is destroyed, make a call to the super class
-     */
+    /*** When the activity is destroyed, make a call to the super class*/
     @Override
     public void onDestroy() {
         super.onDestroy();
     }
 
-    /* On resume, check for crashes and updates with HockeyApp,
+    /**
+     *  On resume, check for crashes and updates with HockeyApp,
      * and set up the file list,swipe menu, and event listeners
      */
     @Override
@@ -175,7 +173,6 @@ public class AnalysisActivity extends Activity {
                         mAdapter.remove(csvFilesNameList.get(position));
                         lv_csv_files.setAdapter(mAdapter);
                         break;
-                    //todo - work for case 2 :
                 }
                 return false;
             }
@@ -316,6 +313,11 @@ public class AnalysisActivity extends Activity {
 
         else if (id == R.id.action_scanned_data) {
             Intent scanDataIntent = new Intent(this, ScanListActivity.class);
+            startActivity(scanDataIntent);
+            return true ;
+        }
+        else if (id == R.id.action_dummy){
+            Intent scanDataIntent = new Intent(this, DummyActivity.class);
             startActivity(scanDataIntent);
             return true ;
         }
