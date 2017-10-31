@@ -14,10 +14,20 @@
         android:layout_marginStart="@dimen/dip8"
         android:layout_weight="1">
 
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:elevation="6dp"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
         <android.support.v4.view.ViewPager
             android:id="@+id/viewpager"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tab_layout"/>
 
         <ProgressBar
             android:id="@+id/calProgress"

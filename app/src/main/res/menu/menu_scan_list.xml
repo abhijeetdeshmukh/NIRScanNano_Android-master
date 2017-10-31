@@ -6,23 +6,23 @@
     <item
         android:id="@+id/action_info"
         android:icon="@drawable/ic_action_info"
-        app:showAsAction="ifRoom"
+        android:showAsAction="ifRoom"
         android:title="@string/action_info" />
 
     <item
         android:id="@+id/action_settings"
         android:icon="@drawable/ic_action_settings"
-        app:showAsAction="ifRoom"
+        android:showAsAction="ifRoom"
         android:title="@string/action_settings" />
 
     <item
         android:id="@+id/action_scanned_data"
-        app:showAsAction="always"
+        android:showAsAction="always"
         android:title="@string/action_scanned_data" />
 
     <item
         android:id="@+id/action_dummy"
-        app:showAsAction="ifRoom"
+        android:showAsAction="ifRoom"
         android:title="@string/action_dummy" />
 
 </menu>

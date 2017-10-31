@@ -17,7 +17,7 @@ public class NANO {
     private double mSID = 0 ;
 
     //constructor
-    public  NANO(ArrayList<Double> x, ArrayList<Double> y){
+    public  NANO( ArrayList<Double> x, ArrayList<Double> y){
         mOrganicData = x ;
         mSampleData = y ;
     }

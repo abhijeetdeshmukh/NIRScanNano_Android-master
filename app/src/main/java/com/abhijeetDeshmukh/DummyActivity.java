@@ -23,7 +23,7 @@ import java.util.ArrayList;
 
 import static java.lang.Float.parseFloat;
 
-public class DummyActivity extends Activity {
+public class DummyActivity extends AppCompatActivity {
 
     private Context mContext;
 

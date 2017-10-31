@@ -53,7 +53,6 @@ public class AnalysisActivity extends Activity {
         return new SwipeMenuCreator() {
             @Override
             public void create(SwipeMenu menu) {
-
                 SwipeMenuItem settingsItem = new SwipeMenuItem(
                         getApplicationContext());
                 // set item background
@@ -81,8 +80,6 @@ public class AnalysisActivity extends Activity {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
                 getResources().getDisplayMetrics());
     }
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,13 +157,14 @@ public class AnalysisActivity extends Activity {
         mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, csvFilesNameList);
         lv_csv_files.setAdapter(mAdapter);
         lv_csv_files.setMenuCreator(unknownCreator);
-        /* set the on menu item click for the SwipeMenuListView.
+
+        /**
+         * set the on menu item click for the SwipeMenuListView.
          * In this case, delete the selected file
          */
         lv_csv_files.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(final int position, SwipeMenu menu, int index) {
-
                 switch (index) {
                     case 0:
                         removeFile(mAdapter.getItem(position));
@@ -178,7 +176,8 @@ public class AnalysisActivity extends Activity {
             }
         });
 
-        /* Add item click listener to file listview. This will close an item if it's
+        /**
+         *  Add item click listener to file listview. This will close an item if it's
          * swipe menu is open
          */
         lv_csv_files.setOnItemClickListener(new AdapterView.OnItemClickListener() {

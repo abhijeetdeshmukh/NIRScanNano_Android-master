@@ -22,10 +22,12 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -51,6 +53,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -61,6 +64,12 @@ import java.util.List;
 import com.opencsv.CSVWriter;
 import com.kstechnologies.nirscannanolibrary.KSTNanoSDK;
 import com.kstechnologies.nirscannanolibrary.SettingsManager;
+
+import easyfilepickerdialog.kingfisher.com.library.model.DialogConfig;
+import easyfilepickerdialog.kingfisher.com.library.model.SupportFile;
+import easyfilepickerdialog.kingfisher.com.library.view.FilePickerDialogFragment;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Activity controlling the Nano once it is connected
@@ -79,7 +88,7 @@ import com.kstechnologies.nirscannanolibrary.SettingsManager;
  *
  * @author collinmast
  */
-public class NewScanActivity extends Activity {
+public class NewScanActivity extends AppCompatActivity {
 
     private static Context mContext;
 
@@ -132,8 +141,10 @@ public class NewScanActivity extends Activity {
     private String preferredDevice;
     private LinearLayout ll_conf;
     private KSTNanoSDK.ScanConfiguration activeConf;
-
     private Menu mMenu;
+
+    private TextView mAnalysisTV ;
+    private Button mCompareButton ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,11 +178,17 @@ public class NewScanActivity extends Activity {
         });
 
         //Set up action bar enable tab navigation
-        ActionBar ab = getActionBar();
+        //Set up action bar title, back button, and navigation tabs
+        android.support.v7.app.ActionBar ab = getSupportActionBar();
         if (ab != null) {
             ab.setDisplayHomeAsUpEnabled(true);
             ab.setTitle(getString(R.string.new_scan));
             ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+            TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout_new_scan);
+            tabLayout.addTab(tabLayout.newTab().setText("Tab 1"));
+            tabLayout.addTab(tabLayout.newTab().setText("Tab 2"));
+            tabLayout.addTab(tabLayout.newTab().setText("Tab 3"));
 
             mViewPager = (ViewPager) findViewById(R.id.viewpager);
             mViewPager.setOffscreenPageLimit(2);
@@ -195,12 +212,12 @@ public class NewScanActivity extends Activity {
             };
 
             // Add 3 tabs, specifying the tab's text and TabListener
-            for (int i = 0; i < 3; i++) {
-                ab.addTab(
-                        ab.newTab()
-                                .setText(getResources().getStringArray(R.array.graph_tab_index)[i])
-                                .setTabListener(tl));
-            }
+//            for (int i = 0; i < 3; i++) {
+//                ab.addTab(
+//                        ab.newTab()
+//                                .setText(getResources().getStringArray(R.array.graph_tab_index)[i])
+//                                .setTabListener(tl));
+//            }
         }
 
         //Set up UI elements and event handlers
@@ -279,9 +296,37 @@ public class NewScanActivity extends Activity {
         mAbsorbanceFloat = new ArrayList<>();
         mReflectanceFloat = new ArrayList<>();
         mWavelengthFloat = new ArrayList<>();
+
+        mCompareButton = (Button) findViewById(R.id.btn_compare_new_scan);
+        mCompareButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                DialogConfig dialogConfig = new DialogConfig.Builder()
+                        .enableMultipleSelect(false) // default is false
+                        .enableFolderSelect(false) // default is false
+//                        .initialDirectory(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "Android") // default is sdcard
+                        .supportFiles( new SupportFile(".csv", 0)) // default is showing all file types.
+                        .build();
+
+                new FilePickerDialogFragment.Builder()
+                        .configs(dialogConfig)
+                        .onFilesSelected(new FilePickerDialogFragment.OnFilesSelectedListener() {
+                            @Override
+                            public void onFileSelected(List<File> list) {
+                                Log.e(TAG, "total Selected file: " + list.size());
+                                for (File file : list) {
+                                    Log.e(TAG, "Selected file: " + file.getAbsolutePath());
+                                    mAnalysisTV.setText( file.getName());
+
+                                }
+                            }
+                        })
+                        .build()
+                        .show( getSupportFragmentManager(),"some");
+            }
+        });
     }
 
-    /*
+    /**
      * When the activity is destroyed, unregister all broadcast receivers, remove handler callbacks,
      * and store all user preferences
      */

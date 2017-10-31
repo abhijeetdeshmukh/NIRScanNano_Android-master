@@ -78,14 +78,15 @@
         android:layout_marginTop="20dp"
         app:layout_constraintTop_toBottomOf="@+id/tv_kl_divergence" />
 
-    <TextView android:id="@+id/tv_sad_value"
+    <TextView
+        android:id="@+id/tv_sad_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=" "
+        android:layout_marginLeft="21dp"
         android:layout_marginTop="19dp"
-        app:layout_constraintTop_toBottomOf="@+id/tv_kld_value"
+        android:text=" "
         app:layout_constraintLeft_toRightOf="@+id/tv_kl_divergence"
-        android:layout_marginLeft="21dp" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_kld_value" />
 
     <TextView android:id="@+id/tv_sid"
         android:layout_width="wrap_content"

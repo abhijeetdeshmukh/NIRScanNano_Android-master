@@ -125,13 +125,13 @@ public class ScanListActivity extends Activity {
         lv_csv_files.setAdapter(mAdapter);
         lv_csv_files.setMenuCreator(unknownCreator);
 
-        /* set the on menu item click for the SwipeMenuListView.
-         * In this case, delete the selected file
-         */
+        /**
+          * set the on menu item click for the SwipeMenuListView.
+          * In this case, delete the selected file
+          */
         lv_csv_files.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(final int position, SwipeMenu menu, int index) {
-
                 switch (index) {
                     case 0:
                         removeFile(mAdapter.getItem(position));
@@ -230,15 +230,13 @@ public class ScanListActivity extends Activity {
      * stored CSV files
      */
     public void populateListView() {
-        Field[] files = R.raw.class.getFields();
-
+        //Field[] files = R.raw.class.getFields();
 //        // loop for every file in raw folder
 //        for (Field file : files) {
 //            String filename = file.getName();
 //
 //            csvFiles.add(filename);
 //        }
-
         String nanoExtPath = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
         File yourDir = new File(nanoExtPath, "/");
         for (File f : yourDir.listFiles()) {

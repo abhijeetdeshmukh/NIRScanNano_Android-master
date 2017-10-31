@@ -1,16 +1,21 @@
 package com.kstechnologies.NanoScan;
 
 import android.app.ActionBar;
-import android.app.Activity;
+import android.app.Dialog;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +27,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.abhijeetDeshmukh.DummyActivity;
+import com.abhijeetDeshmukh.NANO;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
@@ -33,19 +40,26 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.kstechnologies.nirscannanolibrary.KSTNanoSDK;
 import com.kstechnologies.nirscannanolibrary.ScanListDictionary;
+import com.kstechnologies.nirscannanolibrary.SettingsManager;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.List;
 
-import com.kstechnologies.nirscannanolibrary.SettingsManager;
+import easyfilepickerdialog.kingfisher.com.library.model.DialogConfig;
+import easyfilepickerdialog.kingfisher.com.library.model.SupportFile;
+import easyfilepickerdialog.kingfisher.com.library.view.FilePickerDialogFragment;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Activity controlling the graphing of stored scan files.
@@ -54,15 +68,21 @@ import com.kstechnologies.nirscannanolibrary.SettingsManager;
  *
  * @author collinmast
  */
-public class GraphActivity extends Activity {
+public class GraphActivity extends AppCompatActivity {
 
-    private static Context mContext;
+    // private static Context mContext;
+    private Context mContext;
 
     private TextView mAnalysisTV ;
     private Button mCompareButton ;
+    private TextView mSelectFileTV ;
+
+    private ArrayList<Double> mProfile1List;
+    private ArrayList<Double> mProfile2List;
 
     private ListView graphListView;
-    private ViewPager mViewPager;
+    ViewPager mViewPager;
+    private String fileSelectedName;
     private String fileName;
     private ArrayList<String> mXValues;
 
@@ -84,7 +104,7 @@ public class GraphActivity extends Activity {
         fileName = intent.getStringExtra("file_name");
 
         //Set up action bar title, back button, and navigation tabs
-        ActionBar ab = getActionBar();
+       android.support.v7.app.ActionBar ab = getSupportActionBar();
         if (ab != null) {
             ab.setDisplayHomeAsUpEnabled(true);
             if (fileName.contains(".csv")) {
@@ -94,9 +114,14 @@ public class GraphActivity extends Activity {
             }
             ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
+            TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+            tabLayout.addTab(tabLayout.newTab().setText("Tab 1"));
+            tabLayout.addTab(tabLayout.newTab().setText("Tab 2"));
+            tabLayout.addTab(tabLayout.newTab().setText("Tab 3"));
+
             mViewPager = (ViewPager) findViewById(R.id.viewpager);
             mViewPager.setOffscreenPageLimit(2);
-
+            tabLayout.setupWithViewPager(mViewPager);
             // Create a tab listener that is called when the user changes tabs.
             ActionBar.TabListener tl = new ActionBar.TabListener() {
                 @Override
@@ -116,18 +141,18 @@ public class GraphActivity extends Activity {
             };
 
             // Add 3 tabs, specifying the tab's text and TabListener
-            for (int i = 0; i < 3; i++) {
+           /* for (int i = 0; i < 3; i++) {
                 ab.addTab(
                         ab.newTab()
                                 .setText(getResources().getStringArray(R.array.graph_tab_index)[i])
                                 .setTabListener(tl));
-            }
+            }*/
         }
 
         graphListView = (ListView) findViewById(R.id.lv_scan_data);
 
         mAnalysisTV = (TextView) findViewById(R.id.tv_analysis);
-        mCompareButton = (Button) findViewById(R.id.btn_compare);
+
     }
 
     @Override
@@ -136,11 +161,13 @@ public class GraphActivity extends Activity {
 
         //Initialize pager adapter
         CustomPagerAdapter pagerAdapter = new CustomPagerAdapter(this);
+        mViewPager= (ViewPager) findViewById(R.id.viewpager);
+
         mViewPager.setAdapter(pagerAdapter);
         mViewPager.invalidate();
 
         //Set page change listener for pager to show proper tab when selected
-        mViewPager.setOnPageChangeListener(
+        mViewPager.addOnPageChangeListener(
                 new ViewPager.SimpleOnPageChangeListener() {
                     @Override
                     public void onPageSelected(int position) {
@@ -152,7 +179,6 @@ public class GraphActivity extends Activity {
                         }
                     }
                 });
-
 
         mXValues = new ArrayList<>();
         ArrayList<String> mIntensityString = new ArrayList<>();
@@ -168,7 +194,8 @@ public class GraphActivity extends Activity {
         BufferedReader dictReader = null;
         InputStream is = null;
 
-        /*Try to open the file. First from the raw resources, then from the external directory
+        /**
+         * Try to open the file. First from the raw resources, then from the external directory
          * if that fails
          */
         try {
@@ -317,6 +344,170 @@ public class GraphActivity extends Activity {
             graphListView.setAdapter(mAdapter);
         }
 
+        mSelectFileTV = (TextView) findViewById(R.id.tv_select_file);
+        mCompareButton = (Button) findViewById(R.id.btn_compare);
+        mSelectFileTV.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                DialogConfig dialogConfig = new DialogConfig.Builder()
+                        .enableMultipleSelect(false) // default is false
+                        .enableFolderSelect(false) // default is false
+   //issue with Raw.**                     .initialDirectory("android.resource://" + getPackageName() + "/"+R.raw.)
+ //                       .initialDirectory( "/storage/emulated/0/")        //working
+//                        .initialDirectory(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "Android") // default is sdcard
+                        .supportFiles( new SupportFile(".csv", 0)) // default is showing all file types.
+                        .build();
+                new FilePickerDialogFragment.Builder()
+                        .configs(dialogConfig)
+                        .onFilesSelected(new FilePickerDialogFragment.OnFilesSelectedListener() {
+                            @Override
+                            public void onFileSelected(List<File> list) {
+                                Log.e(TAG, "total Selected file: " + list.size());
+                                for (File file : list) {
+                                    Log.e(TAG, "Selected file: " + file.getAbsolutePath());
+
+//                                    StringBuilder sb = new StringBuilder();
+//                                    sb.append(R.string.selected_file).append( file.getName() );
+                                    mSelectFileTV.setText( file.getName() );
+                                }
+                            }
+                        })
+                        .build()
+                        .show( getSupportFragmentManager(),"some");
+                mCompareButton.setVisibility(View.VISIBLE);
+            }
+        });
+
+        mCompareButton.setOnClickListener( new View.OnClickListener() {
+            public void onClick(View v) {
+            doAnalysis();
+            }
+        });
+    }
+
+    private void doAnalysis(){
+        mProfile1List = getFilesData(fileName);
+        Toast.makeText(GraphActivity.this, "got first data", Toast.LENGTH_SHORT).show();
+        mProfile2List = getFilesData( mSelectFileTV.getText().toString() );
+        Toast.makeText(GraphActivity.this, "got second data", Toast.LENGTH_SHORT).show();
+
+        NANO nano = new NANO(mProfile1List, mProfile2List);
+        Toast.makeText(GraphActivity.this, "nano : started", Toast.LENGTH_SHORT).show();
+        nano.processNANO();
+        Toast.makeText(GraphActivity.this, "nano : completed", Toast.LENGTH_SHORT).show();
+
+        String KLDivergancePQValue = String.valueOf(nano.getKLDpq());
+        String KLDiverganceQPValue = String.valueOf(nano.getKLDqp()) ;
+        String SADValue = String.valueOf(nano.getSAD());
+        String SIDValue = String.valueOf(nano.getSID());
+
+        String analysis = "Analysis : \n" + "File selected : " + fileSelectedName + "\n" +
+                                "KL diverge PQ : " + KLDivergancePQValue + "\n" +
+                                "KL diverge QP : " + KLDiverganceQPValue + "\n" +
+                                " SAD : " + SADValue + "\n" +
+                                " SID : " + SIDValue + "\n";
+        mAnalysisTV.setText( analysis );
+    }
+
+    private ArrayList<Double> getFilesData(String fileName) {
+
+        mXValues = new ArrayList<>();
+        ArrayList<String> mIntensityString = new ArrayList<>();
+        ArrayList<String> mAbsorbanceString = new ArrayList<>();
+        ArrayList<String> mReflectanceString = new ArrayList<>();
+
+        ArrayList<Double> intensityDouble = new ArrayList<>();
+        ArrayList<Double> wavelengthDouble = new ArrayList<>();
+        ArrayList<Double> reflectanceDouble = new ArrayList<>();
+
+        BufferedReader reader = null;
+        BufferedReader dictReader = null;
+        InputStream is = null;
+
+        /**
+         * Try to open the file. First from the raw resources, then from the external directory
+         * if that fails
+         */
+        try {
+            is = getResources().openRawResource(getResources().getIdentifier(fileName, "raw", getPackageName()));
+            reader = new BufferedReader(new InputStreamReader(is));
+        } catch (Resources.NotFoundException e) {
+            try {
+                reader = new BufferedReader(new FileReader(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + fileName));
+                dictReader = new BufferedReader(new FileReader(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + fileName.replace(".csv", ".dict")));
+            } catch (FileNotFoundException e1) {
+                e1.printStackTrace();
+                Toast.makeText(mContext, getString(R.string.file_not_found), Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }
+
+        //Read lines in from the file
+        try {
+            String line;
+            if (reader != null) {
+                while ((line = reader.readLine()) != null) {
+                    String[] RowData = line.split(",");
+                    if (RowData[0].equals("(null)")) {
+                        mXValues.add("0");
+                    } else {
+                        if (RowData[0].equals("Wavelength")) {
+                            mXValues.add(RowData[0]);
+                        } else {
+                            mXValues.add(getSpatialFreq(RowData[0]));
+                        }
+                    }
+                    if (RowData[1].equals("(null)")) {
+                        mIntensityString.add("0");
+                    } else {
+                        mIntensityString.add(RowData[1]);
+                    }
+                    if (RowData[2].equals("(null)")) {
+                        mAbsorbanceString.add("0");
+                    } else {
+                        mAbsorbanceString.add(RowData[2]);
+                    }
+                    if (RowData[3].equals("(null)")) {
+                        mReflectanceString.add("0");
+                    } else {
+                        mReflectanceString.add(RowData[3]);
+                    }
+                }
+            }
+        } catch (IOException ex) {
+            // handle exception
+        } finally {
+            try {
+                if (is != null) {
+                    is.close();
+                }
+            } catch (IOException e) {
+                // handle exception
+            }
+        }
+
+        //Remove the first items since these are column labels
+        mXValues.remove(0);
+        mIntensityString.remove(0);
+        mAbsorbanceString.remove(0);
+        mReflectanceString.remove(0);
+
+        //Generate data points and calculate mins and maxes
+        for (int i = 0; i < mXValues.size(); i++) {
+            try {
+//                Double fIntensity = Double.parseDouble(mIntensityString.get(i));
+//                Float fAbsorbance = Float.parseFloat(mAbsorbanceString.get(i));Float fReflectance = Float.parseFloat(mReflectanceString.get(i));
+                Double fWavelength = Double.parseDouble(mXValues.get(i));
+                Double fReflectance = Double.parseDouble(mReflectanceString.get(i));
+                reflectanceDouble.add(fReflectance);
+                wavelengthDouble.add(fWavelength);
+
+            } catch (NumberFormatException e) {
+                Toast.makeText(GraphActivity.this, "Error parsing float value", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }
+
+        return reflectanceDouble ;
     }
 
     /*** When the activity is destroyed, nothing is needed except a call to the super class*/
@@ -410,11 +601,7 @@ public class GraphActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-
-
-    /**
-     * Custom adapter to control the dictionary items in the listview
-     */
+    /*** Custom adapter to control the dictionary items in the listview*/
     public class ScanListAdapter extends ArrayAdapter<KSTNanoSDK.ScanListManager> {
         private ViewHolder viewHolder;
 
@@ -449,11 +636,10 @@ public class GraphActivity extends Activity {
             private TextView dataTitle;
             private TextView dataBody;
         }
+
     }
 
-    /**
-     * Pager enum to control tab tile and layout resource
-     */
+    /*** Pager enum to control tab tile and layout resource*/
     public enum CustomPagerEnum {
 
         REFLECTANCE(R.string.reflectance, R.layout.page_graph_reflectance),
@@ -471,12 +657,9 @@ public class GraphActivity extends Activity {
         public int getLayoutResId() {
             return mLayoutResId;
         }
-
     }
 
-    /**
-     * Custom pager adapter to handle changing chart data when pager tabs are changed
-     */
+    /*** Custom pager adapter to handle changing chart data when pager tabs are changed*/
     public class CustomPagerAdapter extends PagerAdapter {
 
         private Context mContext;
@@ -808,9 +991,7 @@ public class GraphActivity extends Activity {
         }
     }
 
-    /**
-     * Enumeration of chart types
-     */
+    /*** Enumeration of chart types*/
     public enum ChartType {
         REFLECTANCE,
         ABSORBANCE,
@@ -851,4 +1032,60 @@ public class GraphActivity extends Activity {
         }
     }
 
+
+    /////////////////////////////////////////////////////////////
+
+    private String[] mFileList;
+    private File mPath = new File( android.os.Environment.getExternalStorageDirectory().getAbsolutePath() );
+    private String mChosenFile;
+    private static final String FTYPE = ".txt";
+    private static final int DIALOG_LOAD_FILE = 1000;
+    private void loadFileList() {
+        try {
+            mPath.mkdirs();
+        }
+        catch(SecurityException e) {
+            Log.e(TAG, "unable to write on the sd card " + e.toString());
+        }
+        if(mPath.exists()) {
+            FilenameFilter filter = new FilenameFilter() {
+
+                @Override
+                public boolean accept(File dir, String filename) {
+                    File sel = new File(dir, filename);
+                    return filename.contains(FTYPE) || sel.isDirectory();
+                }
+
+            };
+            mFileList = mPath.list(filter);
+        }
+        else {
+            mFileList= new String[0];
+        }
+    }
+
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        Dialog dialog = null;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        switch(id) {
+            case DIALOG_LOAD_FILE:
+                builder.setTitle("Choose your file");
+                if(mFileList == null) {
+                    Log.e(TAG, "Showing file picker before loading the file list");
+                    dialog = builder.create();
+                    return dialog;
+                }
+                builder.setItems(mFileList, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        mChosenFile = mFileList[which];
+                        //you can do stuff with the file here too
+                    }
+                });
+                break;
+        }
+        dialog = builder.show();
+        return dialog;
+    }
 }
